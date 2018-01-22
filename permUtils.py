@@ -5,6 +5,16 @@ def element_in(element, cycles):
 
   return False;
 
+def permute_once(element, cycles):
+  for cycle in reversed(cycles):
+    if element in cycle:
+      #Return next element.
+      index = cycle.index(element)
+      return cycle[(index + 1) % len(cycle)]
+
+  return element
+        
+
 def permute(element, cycles):
 
   new_cycle = (element,)
@@ -46,14 +56,16 @@ def permute(element, cycles):
 
 def disjoint(cycles):
   
-  collected_elements = {}
+  collected_elements = set()
 
   for cycle in cycles:
     for element in cycles:
+
       #Not disjoint if an element is repeated.
       if element in collected_elements:
         return False
-      
+
+      collected_elements.add(element)  
 
 
 def simplify(cycles):
@@ -85,5 +97,49 @@ def simplify(cycles):
 
 
   return new_cycles
+# CYCLE_EQUALITY:
+# An easy check is to see what elements are permuted in each
+# cycle. If one cycle checks less or more elements, throw it
+# out!
+#
+# Once that is checked, we can use our set of elements to check
+# if each cycle transports the element to the right location
+#
+# Cycle equality assumes disjointness, if cycles are not
+# disjoint then that will cause errors 
+def cycle_equality(left, right):
 
- 
+  if disjoint(left):
+    raise ValueError('left cycles should be disjoint!')
+  if disjoint(right):
+    raise ValueError('Right cycles should be disjoint!')
+
+  left_elems = set()
+
+  for cycle in left:
+    for element in cycle:
+      left_elems.add(element)
+
+
+  right_elems = set()
+    
+  for cycle in right:
+    for element in cycle:
+      right_elems.add(element)
+
+  if right_elems != left_elems:
+    return False
+
+  #At this point the elements are the same, so we just use 
+  # right_elems.
+  
+  for element in right_elems:
+
+    nleft = permute_once(element, left)
+    nright = permute_once(element, right)
+
+    if nleft != nright:
+      return False
+
+  #All elements are permuted in the same way.
+  return True

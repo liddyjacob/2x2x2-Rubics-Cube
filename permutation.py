@@ -23,3 +23,8 @@ class Permutation:
   def __str__(self):
     return str(self.cycles)
 
+  def __eq__(self, other):
+    #Not as simple as checking if each
+    #set of cycles is same, because order
+    # does not matter in disjoint cycle notation.
+    return permUtils.cycle_equality(self.cycles, other.cycles)
