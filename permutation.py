@@ -17,7 +17,11 @@ class Permutation:
   # Multiplication is done by listing cycles and permuting
   # from left to right.
   def __mul__(self, other):
-    return Permutation(self.p1 + self.p2)
+
+    concat_cycles = self.cycles + other.cycles
+    product = Permutation(concat_cycles)
+
+    return product
 
   # A permutation is defined by its cycles.
   def __str__(self):
@@ -26,5 +30,9 @@ class Permutation:
   def __eq__(self, other):
     #Not as simple as checking if each
     #set of cycles is same, because order
-    # does not matter in disjoint cycle notation.
-    return permUtils.cycle_equality(self.cycles, other.cycles)
+    # does not matter in disjoint cycle notation. 
+    return permUtils.cycle_equality(self.cycles, other.cycles)  
+    return NotImplemented
+
+  def __ne__(self, other):
+    return not self == other
